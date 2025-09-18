@@ -12,7 +12,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     full_name = Column(String, nullable=True)
-    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(IST))  
+    creationtime = Column(DateTime(timezone=True), default=lambda: datetime.now(IST))  
 
     documents = relationship("Document", back_populates="owner") 
 
@@ -25,7 +25,7 @@ class Document(Base):
     filename = Column(String, nullable=False)
     filetype = Column(String, nullable=False)
     version = Column(Integer, default=1)
-    uploaded_at = Column(DateTime(timezone=True), default=lambda: datetime.now(IST))
+    uploadedtime = Column(DateTime(timezone=True), default=lambda: datetime.now(IST))
     minio_key = Column(String, nullable=False)
 
     uploaded_by = Column(Integer, ForeignKey("users.id"))

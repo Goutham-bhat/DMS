@@ -1,7 +1,12 @@
 from fastapi import FastAPI
+from database import engine, Base
+import models
+
 app = FastAPI()
 
-@app.get("/")
-def hello():
-    return{"message": "Hello World"}
+#Creating Tables for the first time if they don't exist
+Base.metadata.create_all(bind=engine)
 
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
