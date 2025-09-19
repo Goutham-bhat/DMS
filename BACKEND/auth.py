@@ -2,10 +2,15 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Optional
+import os
+from dotenv import load_dotenv
+
+# Load .env file variables
+load_dotenv()
 
 # Secret key and algorithm for JWT
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "SHA256"
+SECRET_KEY = os.getenv("SECRET_KEY")  # must match .env key name
+ALGORITHM = "HS512"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
