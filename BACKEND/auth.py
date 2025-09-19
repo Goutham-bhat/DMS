@@ -10,7 +10,7 @@ load_dotenv()
 
 # Secret key and algorithm for JWT
 SECRET_KEY = os.getenv("SECRET_KEY")  # must match .env key name
-ALGORITHM = "HS512"
+ALGORITHM = "HS512" 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
