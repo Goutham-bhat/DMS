@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+out/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Word documents
+*.docx
+
+# Ignore text files
+*.txt
+
+.env
