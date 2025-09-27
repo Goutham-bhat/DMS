@@ -5,10 +5,8 @@ import tempfile
 import shutil
 import requests
 
-# -------------------------
-# Configure IPFS storage folder
-# -------------------------
-IPFS_FOLDER = r"C:\Users\gouth\Desktop\IPFSSTORE"
+load_dotenv()
+IPFS_FOLDER = os.getenv("ipfsfolder")
 os.makedirs(IPFS_FOLDER, exist_ok=True)
 os.environ["IPFS_PATH"] = IPFS_FOLDER
 
