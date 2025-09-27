@@ -36,20 +36,20 @@ export const showSuccessToast = (message, code = null) => {
 export const showErrorToast = (message) => {
   toast.error(message, {
     position: "top-right",
-    autoClose: 2000, // 2 seconds
+    autoClose: 2000,
     hideProgressBar: false,
     style: {
-      backgroundColor: "#091d61ff", // slightly darker blue
-      color: "#fca5a5",           // soft red text for error
+      backgroundColor: "#091d61ff", 
+      color: "#fca5a5",           
       fontWeight: "bold",
     },
     progressStyle: {
-      background: "#f87171", // red-ish progress bar
+      background: "#f87171", 
     },
   });
 };
 
-// This component must be added once in your app (usually in App.js)
+
 export const ToastProvider = () => {
   return <ToastContainer />;
 };
