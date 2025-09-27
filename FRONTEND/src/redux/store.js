@@ -4,7 +4,7 @@ import authReducer from "./authslice";
 // Load persisted auth state
 const persistedAuth = (() => {
   try {
-    const serializedState = localStorage.getItem("auth"); // <-- match key with authslice
+    const serializedState = localStorage.getItem("auth"); 
     return serializedState ? JSON.parse(serializedState) : undefined;
   } catch (err) {
     console.warn("[store] Failed to load auth state:", err);
