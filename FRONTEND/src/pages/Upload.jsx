@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { showSuccessToast, showErrorToast } from "../utils/toast";
 
 export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -34,43 +35,50 @@ export default function UploadPage() {
   const handleRemoveFile = (index) => {
     setSelectedFiles((prev) => prev.filter((_, idx) => idx !== index));
   };
+const handleUpload = async () => {
+  if (selectedFiles.length === 0) return;
 
-  const handleUpload = async () => {
-    if (selectedFiles.length === 0) return;
+  setLoading(true);
+  setUploadResults([]);
 
-    setLoading(true);
-    setUploadResults([]);
+  for (const file of selectedFiles) {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    // Upload files **one by one**
-    for (const file of selectedFiles) {
-      const formData = new FormData();
-      formData.append("file", file); // single file per request
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/upload?user_id=${user.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      try {
-        const response = await axios.post(
-          `http://127.0.0.1:8000/upload?user_id=${user.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      // Append result for this file (UI stays the same)
+      setUploadResults((prev) => [...prev, response.data]);
 
-        // Append result for this file
-        setUploadResults((prev) => [...prev, response.data]);
-      } catch (err) {
-        console.error("Upload failed:", err);
-        setUploadResults((prev) => [
-          ...prev,
-          { filename: file.name, error: "Upload failed" },
-        ]);
-      }
+      // ✅ Show success toast
+      showSuccessToast(`File uploaded: ${response.data.filename}`, response.status);
+    } catch (err) {
+      console.error("Upload failed:", err);
+
+      setUploadResults((prev) => [
+        ...prev,
+        { filename: file.name, error: "Upload failed" },
+      ]);
+
+      // ✅ Show error toast
+      const status = err.response?.status || "Network error";
+      showErrorToast(`Upload failed: ${file.name}`, status);
     }
+  }
 
-    setLoading(false);
-  };
+  setLoading(false);
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-black text-white">
