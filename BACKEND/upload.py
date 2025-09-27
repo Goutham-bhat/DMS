@@ -2,15 +2,13 @@
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import Session
 from models import Document
-from ipfs_service import add_file_to_ipfs  # reuse your ipfs_service
+from ipfs_service import add_file_to_ipfs  
 import hashlib
 import os
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
-# -------------------------
-# SHA256 Hashing
-# -------------------------
+
 def compute_sha(file_path: str) -> str:
     sha256_hash = hashlib.sha256()
     with open(file_path, "rb") as f:
@@ -18,9 +16,7 @@ def compute_sha(file_path: str) -> str:
             sha256_hash.update(chunk)
     return sha256_hash.hexdigest()
 
-# -------------------------
-# Upload document (DB + IPFS)
-# -------------------------
+
 def upload_document(db: Session, user_id: int, file_path: str, filename: str):
     """
     Uploads a file to IPFS and records it in the database with metadata:
