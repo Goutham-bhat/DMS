@@ -2,7 +2,6 @@
 
 from database import engine, Base
 
-# 🔥 WARNING: This will DELETE all existing data
 print("[DB] Dropping all tables...")
 Base.metadata.drop_all(bind=engine)
 print("[DB] All tables dropped.")
