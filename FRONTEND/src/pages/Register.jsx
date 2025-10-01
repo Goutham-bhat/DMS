@@ -51,7 +51,6 @@ export default function Register() {
       // ✅ Use centralized success toast, include status code
       showSuccessToast("User registered successfully!", response.status);
 
-      // Redirect to login after short delay
       setTimeout(() => navigate("/"), 1500);
 
       // Reset form

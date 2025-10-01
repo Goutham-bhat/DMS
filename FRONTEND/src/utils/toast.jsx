@@ -3,7 +3,6 @@ import React from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Function to trigger a success toast with optional code/info
 export const showSuccessToast = (message, code = null) => {
   toast.success(
     <div>
@@ -21,12 +20,12 @@ export const showSuccessToast = (message, code = null) => {
       draggable: true,
       progress: undefined,
       style: {
-        backgroundColor: "#1e3a8a", // dark blue
-        color: "#bfdbfe",           // light blue text
+        backgroundColor: "#1e3a8a", 
+        color: "#bfdbfe",          
         fontWeight: "bold",
       },
       progressStyle: {
-        background: "#93c5fd", // lighter blue progress bar
+        background: "#93c5fd", 
       },
     }
   );

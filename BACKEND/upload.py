@@ -8,6 +8,7 @@ import os
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
+# SHA256 Hashing
 
 def compute_sha(file_path: str) -> str:
     sha256_hash = hashlib.sha256()
@@ -15,7 +16,6 @@ def compute_sha(file_path: str) -> str:
         for chunk in iter(lambda: f.read(4096), b""):
             sha256_hash.update(chunk)
     return sha256_hash.hexdigest()
-
 
 def upload_document(db: Session, user_id: int, file_path: str, filename: str):
     """

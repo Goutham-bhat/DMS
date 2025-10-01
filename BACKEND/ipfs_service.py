@@ -10,9 +10,7 @@ IPFS_FOLDER = os.getenv("ipfsfolder")
 os.makedirs(IPFS_FOLDER, exist_ok=True)
 os.environ["IPFS_PATH"] = IPFS_FOLDER
 
-# -------------------------
-# Initialize IPFS repo
-# -------------------------
+
 def init_ipfs():
     """Initialize IPFS repo if not already initialized"""
     try:
@@ -26,9 +24,7 @@ def init_ipfs():
     except subprocess.CalledProcessError:
         print("[IPFS] IPFS repo already initialized")
 
-# -------------------------
-# Start IPFS daemon in background
-# -------------------------
+
 def start_ipfs_daemon():
     """Start IPFS daemon programmatically"""
     try:
@@ -41,9 +37,7 @@ def start_ipfs_daemon():
     except Exception as e:
         print(f"[IPFS] Failed to start daemon: {e}")
 
-# -------------------------
 # Add a file to IPFS
-# -------------------------
 def add_file_to_ipfs(file_path: str) -> str:
     """Add a file to IPFS, pin it, and return its CID"""
     try:
@@ -69,9 +63,8 @@ def add_file_to_ipfs(file_path: str) -> str:
         print(f"[IPFS] Error adding file: {e.stderr}")
         return None
 
-# -------------------------
+
 # Remove a file from IPFS
-# -------------------------
 def remove_file_from_ipfs(cid: str):
     """Safely unpin a file and run garbage collection"""
     if not cid:
@@ -104,9 +97,7 @@ def remove_file_from_ipfs(cid: str):
     except subprocess.CalledProcessError as e:
         print(f"[IPFS] Garbage collection failed: {e.stderr}")
 
-# -------------------------
 # Fetch a file from IPFS
-# -------------------------
 def get_file_from_ipfs(cid: str, filename: str) -> str:
     """
     Fetch a file from IPFS and save it locally in a temporary folder.

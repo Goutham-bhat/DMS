@@ -1,7 +1,9 @@
 // src/components/FileList/FileList.jsx
+import React, { useEffect } from "react";
 import { useFiles } from "./hooks/useFiles";
 import FileItem from "./FileItem";
 import FilterSearch from "./FilterSearch";
+import { useSelector } from "react-redux";
 import {
   PreviewModal,
   EditModal,
@@ -10,8 +12,18 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 
+
+
 export default function FileList() {
   const navigate = useNavigate();
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/"); // redirect to login if not logged in
+    }
+  }, [isLoggedIn, navigate]);
+
   const {
     filteredFiles,
     search,

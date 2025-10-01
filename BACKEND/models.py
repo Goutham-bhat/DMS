@@ -11,6 +11,9 @@ IST = timezone(timedelta(hours=5, minutes=30))
 # -------------------------
 # USER Table
 # -------------------------
+# -------------------------
+# USER Table
+# -------------------------
 class User(Base):
     __tablename__ = "users"
 
@@ -19,13 +22,11 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     full_name = Column(String, nullable=True)
     creationtime = Column(DateTime(timezone=True), default=lambda: datetime.now(IST))
-
-    # Role: 'admin' or 'user'
     role = Column(String, default="user", nullable=False)
-
     # Soft delete flag
     deleted = Column(Boolean, default=False)
-
+    # Track last login time
+    last_login = Column(DateTime(timezone=True), nullable=True)
     # Relationship to documents
     documents = relationship("Document", back_populates="owner")
 

@@ -203,9 +203,7 @@ def download_file(
         headers={"Content-Disposition": f"attachment; filename={doc.filename}"}
     )
 
-# -------------------------
 # Preview file
-# -------------------------
 @router.get("/preview/{file_id}")
 def preview_file(
     file_id: int,
@@ -229,9 +227,7 @@ def preview_file(
         headers={"Content-Disposition": "inline"}
     )
 
-# -------------------------
 # Edit file (replace contents)
-# -------------------------
 @router.put("/upload/{file_id}", response_model=FileResponse)
 def edit_file(
     file_id: int,

@@ -312,7 +312,7 @@ const handlePreview = async (file) => {
     setMaxSize,
     setMinUnit,
     setMaxUnit,
-    setRenameValue, // ✅ now exposed for <FileItem />
+    setRenameValue,
     // handlers
     handleDelete,
     handleDownload,

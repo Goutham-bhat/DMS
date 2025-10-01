@@ -12,13 +12,11 @@ import { useTokenWatcher } from "./hooks/useTokenWatcher";
 function App() {
   return (
     <BrowserRouter>
-      {/* Global toast provider */}
       <ToastProvider />
 
-      {/* Token watcher runs inside Router context */}
+
       <TokenWatcherWrapper />
 
-      {/* Application routes */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -30,8 +28,6 @@ function App() {
     </BrowserRouter>
   );
 }
-
-// Small wrapper to call the hook inside Router context
 function TokenWatcherWrapper() {
   useTokenWatcher();
   return null;

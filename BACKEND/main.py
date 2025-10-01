@@ -163,8 +163,6 @@ async def upload_file(
     return JSONResponse(content=response)
 
 
-# -------------------------
-# Mount routers (after CORS middleware)
-# -------------------------
+
 app.include_router(file_router, prefix="/files", tags=["Files"])
 app.include_router(admin_router, prefix="/admin", tags=["Admin"])

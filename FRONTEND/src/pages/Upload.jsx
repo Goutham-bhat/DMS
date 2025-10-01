@@ -57,7 +57,6 @@ const handleUpload = async () => {
         }
       );
 
-      // Append result for this file (UI stays the same)
       setUploadResults((prev) => [...prev, response.data]);
 
       // ✅ Show success toast
