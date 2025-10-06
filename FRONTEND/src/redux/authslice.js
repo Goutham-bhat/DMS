@@ -1,8 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // Load persisted auth state
-const savedAuth = localStorage.getItem("auth");
-const parsedAuth = savedAuth ? JSON.parse(savedAuth) : null;
+let parsedAuth = null;
+try {
+  const savedAuth = localStorage.getItem("auth");
+  parsedAuth = savedAuth ? JSON.parse(savedAuth) : null;
+
+  // Corrupted state: user exists but no token → clear it
+  if (parsedAuth?.user && !parsedAuth?.token) {
+    parsedAuth = null;
+    localStorage.removeItem("auth");
+  }
+} catch (err) {
+  console.warn("[authslice] Failed to parse auth from localStorage:", err);
+  parsedAuth = null;
+}
 
 const initialState = parsedAuth || {
   user: null,      // { id, email, full_name, role }
@@ -15,25 +27,33 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
-      state.user = action.payload.user;  
+      state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLoggedIn = true;
 
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          user: state.user,
-          token: state.token,
-          isLoggedIn: state.isLoggedIn,
-        })
-      );
+      try {
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            user: state.user,
+            token: state.token,
+            isLoggedIn: state.isLoggedIn,
+          })
+        );
+      } catch (err) {
+        console.warn("[authslice] Failed to save auth to localStorage:", err);
+      }
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isLoggedIn = false;
 
-      localStorage.removeItem("auth");
+      try {
+        localStorage.removeItem("auth");
+      } catch (err) {
+        console.warn("[authslice] Failed to remove auth from localStorage:", err);
+      }
     },
   },
 });

@@ -1,8 +1,8 @@
 // pages/UploadPage.js
 import React, { useState, useRef } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../api";
 import { showSuccessToast, showErrorToast } from "../utils/toast";
 
 export default function UploadPage() {
@@ -10,7 +10,7 @@ export default function UploadPage() {
   const [uploadResults, setUploadResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { token, user } = useSelector((state) => state.auth); // user.id
+  const { user } = useSelector((state) => state.auth); // Safe: PrivateRoute ensures logged in
   const fileInputRef = useRef(null);
 
   const handleFileChange = (files) => {
@@ -35,49 +35,45 @@ export default function UploadPage() {
   const handleRemoveFile = (index) => {
     setSelectedFiles((prev) => prev.filter((_, idx) => idx !== index));
   };
-const handleUpload = async () => {
-  if (selectedFiles.length === 0) return;
 
-  setLoading(true);
-  setUploadResults([]);
+  const handleUpload = async () => {
+    if (selectedFiles.length === 0) return;
 
-  for (const file of selectedFiles) {
-    const formData = new FormData();
-    formData.append("file", file);
+    setLoading(true);
+    setUploadResults([]);
 
-    try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/upload?user_id=${user.id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    for (const file of selectedFiles) {
+      const formData = new FormData();
+      formData.append("file", file);
 
-      setUploadResults((prev) => [...prev, response.data]);
+      try {
+        const response = await api.post(
+          `/upload?user_id=${user.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      // ✅ Show success toast
-      showSuccessToast(`File uploaded: ${response.data.filename}`, response.status);
-    } catch (err) {
-      console.error("Upload failed:", err);
+        setUploadResults((prev) => [...prev, response.data]);
+        showSuccessToast(`File uploaded: ${response.data.filename}`, response.status);
+      } catch (err) {
+        console.error("Upload failed:", err);
 
-      setUploadResults((prev) => [
-        ...prev,
-        { filename: file.name, error: "Upload failed" },
-      ]);
+        setUploadResults((prev) => [
+          ...prev,
+          { filename: file.name, error: "Upload failed" },
+        ]);
 
-      // ✅ Show error toast
-      const status = err.response?.status || "Network error";
-      showErrorToast(`Upload failed: ${file.name}`, status);
+        const status = err.response?.status || "Network error";
+        showErrorToast(`Upload failed: ${file.name}`, status);
+      }
     }
-  }
 
-  setLoading(false);
-};
-
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-black text-white">

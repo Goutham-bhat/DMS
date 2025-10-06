@@ -6,7 +6,7 @@ import shutil
 import requests
 
 load_dotenv()
-IPFS_FOLDER = os.getenv("ipfsfolder")
+IPFS_FOLDER = os.getenv("IPFS_FOLDER")
 os.makedirs(IPFS_FOLDER, exist_ok=True)
 os.environ["IPFS_PATH"] = IPFS_FOLDER
 

@@ -1,32 +1,46 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authslice";
+import authReducer, { logout } from "./authslice";
 
-// Load persisted auth state
-const persistedAuth = (() => {
-  try {
-    const serializedState = localStorage.getItem("auth"); 
-    return serializedState ? JSON.parse(serializedState) : undefined;
-  } catch (err) {
-    console.warn("[store] Failed to load auth state:", err);
-    return undefined;
+// Load persisted auth state safely
+let persistedAuth = undefined;
+try {
+  const serializedState = localStorage.getItem("auth");
+  if (serializedState) {
+    const parsedState = JSON.parse(serializedState);
+
+    // Corrupted state: user exists but no token → clear it
+    if (parsedState.user && !parsedState.token) {
+      localStorage.removeItem("auth");
+    } else {
+      persistedAuth = parsedState;
+    }
   }
-})();
+} catch (err) {
+  console.warn("[store] Failed to load persisted auth:", err);
+  persistedAuth = undefined;
+}
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
   },
   preloadedState: {
-    auth: persistedAuth || undefined,
+    auth: persistedAuth,
   },
 });
 
-// Persist on changes
+// Persist auth state changes automatically
 store.subscribe(() => {
   try {
     const state = store.getState();
-    localStorage.setItem("auth", JSON.stringify(state.auth));
+
+    // Save auth only if token exists
+    if (state.auth.token) {
+      localStorage.setItem("auth", JSON.stringify(state.auth));
+    } else {
+      localStorage.removeItem("auth");
+    }
   } catch (err) {
-    console.warn("[store] Failed to save auth state:", err);
+    console.warn("[store] Failed to persist auth state:", err);
   }
 });

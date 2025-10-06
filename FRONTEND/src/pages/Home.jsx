@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+// src/pages/HomePage.jsx
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout as logoutAction } from "../redux/authslice";
@@ -7,13 +8,7 @@ import { UserIcon } from "lucide-react"; // Admin icon
 export default function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoggedIn, user } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/");
-    }
-  }, [isLoggedIn, navigate]);
+  const { user } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logoutAction());
@@ -83,13 +78,31 @@ export default function HomePage() {
         {/* System Flow Cards */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { step: "1. Login", desc: "Sign in securely with your credentials to receive your access token (JWT)." },
-            { step: "2. Upload", desc: "Select and upload your documents. Files are saved locally or on IPFS with metadata stored in the database." },
-            { step: "3. View", desc: "Access your documents anytime and preview them directly in the React app." },
-            { step: "4. Edit", desc: "Update metadata or replace documents. All changes are saved automatically." },
-            { step: "5. Manage", desc: "Search, filter, update, and delete documents. Admins have extra management powers." },
+            {
+              step: "1. Login",
+              desc: "Sign in securely with your credentials to receive your access token (JWT).",
+            },
+            {
+              step: "2. Upload",
+              desc: "Select and upload your documents. Files are saved locally or on IPFS with metadata stored in the database.",
+            },
+            {
+              step: "3. View",
+              desc: "Access your documents anytime and preview them directly in the React app.",
+            },
+            {
+              step: "4. Edit",
+              desc: "Update metadata or replace documents. All changes are saved automatically.",
+            },
+            {
+              step: "5. Manage",
+              desc: "Search, filter, update, and delete documents. Admins have extra management powers.",
+            },
           ].map((item, idx) => (
-            <div key={idx} className="bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:scale-105 hover:shadow-2xl transition duration-300">
+            <div
+              key={idx}
+              className="bg-gray-800 rounded-2xl shadow-lg p-6 transform hover:scale-105 hover:shadow-2xl transition duration-300"
+            >
               <h3 className="text-xl font-bold text-indigo-400 mb-2">{item.step}</h3>
               <p className="text-gray-300">{item.desc}</p>
             </div>

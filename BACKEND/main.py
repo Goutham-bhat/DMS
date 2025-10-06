@@ -10,7 +10,11 @@ import crud_schemas
 import jwt
 import os
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+# Indian Standard Time (UTC+5:30)
+IST = timezone(timedelta(hours=5, minutes=30))
+
 
 from ipfs_service import init_ipfs, start_ipfs_daemon
 from upload import upload_document
@@ -102,6 +106,11 @@ def register_user(user: crud_schemas.UserCreate, db: Session = Depends(get_db)):
 # -------------------------
 # Login endpoint
 # -------------------------
+from datetime import datetime, timedelta, timezone
+
+# Define IST (UTC+5:30)
+IST = timezone(timedelta(hours=5, minutes=30))
+
 @app.post("/login")
 def login_user(user: crud_schemas.UserLogin, db: Session = Depends(get_db)):
     db_user = crud_schemas.verify_user(db, user.email, user.password)
@@ -110,6 +119,12 @@ def login_user(user: crud_schemas.UserLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
+
+    # ✅ Update last_login timestamp in IST
+    db_user.last_login = datetime.now(IST)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
 
     payload = {
         "user_id": db_user.id,
@@ -124,9 +139,11 @@ def login_user(user: crud_schemas.UserLogin, db: Session = Depends(get_db)):
             "email": db_user.email,
             "full_name": db_user.full_name,
             "role": db_user.role,
+            "last_login": db_user.last_login.isoformat(),  # send to frontend
         },
         "token": token,
     }
+
 
 
 # -------------------------
